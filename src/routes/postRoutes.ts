@@ -1,24 +1,17 @@
 import express from 'express';
+import { getPosts, createPost, getPost, updatePost, deletePost } from '../controllers/postController';
+import { validatePost } from '../middleware/postValidation';
+
 
 const router = express.Router();
 
 router.route('/')
-  .get((req, res) => {
-    res.send('Obter todos os posts');
-  })
-  .post((req, res) => {
-    res.send('Criar um post');
-  });
+  .get(getPosts)
+  .post(validatePost,createPost);
 
 router.route('/:id')
-  .get((req, res) => {
-    res.send(`Obter um post com id ${req.params.id}`);
-  })
-  .put((req, res) => {
-    res.send(`Atualizar o post com id ${req.params.id}`);
-  })
-  .delete((req, res) => {
-    res.send(`Deletar o post com id ${req.params.id}`);
-  });
+  .get(getPost)
+  .put(updatePost)
+  .delete(deletePost);
 
 export default router;
