@@ -1,5 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv'
 
 const prisma = new PrismaClient();
 
@@ -9,10 +12,18 @@ export const getPosts = async (req: Request, res: Response) => {
 };
 
 export const createPost = async (req: Request, res: Response) => {
-    const newPost = await prisma.post.create({
-        data: req.body,
-    });
-    res.json(newPost);
+    const {title, description} = req.body
+    const userId = res.locals.userId
+
+    const post = await prisma.post.create({
+        data:{
+            title: title,
+            description: description,
+            published: true,
+            authorId: userId
+        }
+    })
+    res.json(post);
 };
 
 export const getPost = async (req: Request, res: Response) => {
